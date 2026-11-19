@@ -17,9 +17,25 @@ const REFUND_EXAMPLE = {
 
 export function Dashboard() {
   const [name, setName] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalOfPage, setTotalOfPage] = useState(10);
 
   function fetchRefunds() {
     console.log(name);
+  }
+
+  function handlePagination(action: "next" | "previous") {
+    setPage((prevPage) => {
+      if (action === "next" && prevPage < totalOfPage) {
+        return prevPage + 1;
+      }
+
+      if (action === "previous" && prevPage > 1) {
+        return prevPage - 1;
+      }
+
+      return prevPage;
+    });
   }
 
   return (
@@ -40,11 +56,16 @@ export function Dashboard() {
         </Button>
       </form>
 
-      <div className="mt-6 flex flex-col gap-4 max-h-85.5 overflow-y-scroll">
+      <div className="my-6 flex flex-col gap-4 max-h-85.5 overflow-y-scroll">
         <RefundItem data={REFUND_EXAMPLE} />
       </div>
 
-      <Pagination current={1} total={10} />
+      <Pagination
+        current={page}
+        total={totalOfPage}
+        onNext={() => handlePagination("next")}
+        onPrevious={() => handlePagination("previous")}
+      />
     </div>
   );
 }
